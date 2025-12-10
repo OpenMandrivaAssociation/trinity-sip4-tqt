@@ -1,22 +1,16 @@
-#
-# Please submit bugfixes or comments via http://www.trinitydesktop.org/
-#
+%bcond clang 1
 
 # BUILD WARNING:
 #  Remove qt-devel and qt3-devel and any kde*-devel on your system !
 #  Having KDE libraries may cause FTBFS here !
-
-# Note for RHEL6 / Fedora:
-#  Do *NOT* use 'byacc' to build sip4-tqt.
-#  Instead, use 'bison' with a wrapper shell script.
-#  e.g. /usr/local/bin/yacc
-#   contains 'bison --yacc $@'
 
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
 %define tde_version 14.1.5
 %endif
+%define pkg_rel 2
+
 %define tde_pkg sip4-tqt
 %define tde_prefix /opt/trinity
 %define tde_bindir %{tde_prefix}/bin
@@ -29,11 +23,9 @@
 %define tde_tdeincludedir %{tde_includedir}/tde
 %define tde_tdelibdir %{tde_libdir}/trinity
 
-%if 0%{?mdkversion}
 %undefine __brp_remove_la_files
 %define dont_remove_libtool_files 1
 %define _disable_rebuild_configure 1
-%endif
 
 %define tarball_name %{tde_pkg}-trinity
 %global toolchain %(readlink /usr/bin/cc)
@@ -42,16 +34,12 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	4.10.5
-Release:	%{?tde_version}_%{?!preversion:1}%{?preversion:0_%{preversion}}%{?dist}
+Release:	%{?tde_version}_%{?!preversion:%{pkg_rel}}%{?preversion:0_%{preversion}}%{?dist}
 Summary:	Python/C++ bindings generator runtime library
 Group:		Development/Tools/Building
 URL:		http://www.trinitydesktop.org/
 
-%if 0%{?suse_version}
-License:	GPL-2.0+
-%else
 License:	GPLv2+
-%endif
 
 #Vendor:		Trinity Desktop
 #Packager:	Francois Andriot <francois.andriot@free.fr>
@@ -63,9 +51,7 @@ Source0:	https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/
 BuildRequires:	libtqt4-devel >= %{?epoch:%{epoch}:}4.2.0
 BuildRequires:	trinity-filesystem >= %{tde_version}
 
-%if "%{?toolchain}" != "clang"
-BuildRequires:	gcc-c++
-%endif
+%{!?with_clang:BuildRequires:	gcc-c++}
 
 # BISON support
 BuildRequires:  bison
@@ -75,11 +61,6 @@ BuildRequires:	flex
 
 # PYTHON support
 BuildRequires:  pkgconfig(python)
-
-# YACC support
-%if 0%{?rhel} >= 8 || 0%{?fedora} >= 31
-BuildRequires:  byacc
-%endif
 
 %description
 
@@ -103,17 +84,8 @@ specificity towards C++ and Python.
 %files -n sip4-tqt
 %defattr(-,root,root,-)
 %{python_sitearch}/sip_tqt.so
-%if 0%{?mdkversion} || 0%{?pclinuxos} || 0%{?rhel} == 7 || 0%{?suse_version}
 %{python_sitearch}/sip_tqt_config.py*
 %{python_sitearch}/sip_tqt_distutils.py*
-%if 0%{?rhel} == 7
-%{python_sitearch}/__pycache__/sip_tqt_config.*.pyc
-%{python_sitearch}/__pycache__/sip_tqt_distutils.*.pyc
-%endif
-%else
-%pycached %{python_sitearch}/sip_tqt_config.py
-%pycached %{python_sitearch}/sip_tqt_distutils.py
-%endif
 
 ##########
 
@@ -151,14 +123,6 @@ needed to develop Python bindings with sip.
 %{tde_bindir}/sip-tqt
 %{tde_includedir}/sip-tqt.h
 
-##########
-
-%if 0%{?suse_version} && 0%{?opensuse_bs} == 0
-%debug_package
-%endif
-
-##########
-
 %prep
 %autosetup -n %{tarball_name}-%{tde_version}%{?preversion:~%{preversion}}
 
@@ -174,9 +138,7 @@ cd build
 	-d %{python_sitearch} \
 	-e %{tde_includedir} \
 	-u STRIP="" \
-%if "%{?toolchain}" == "clang"
-  -p linux-clang \
-%endif
+  %{?with_clang:-p linux-clang} \
 	CFLAGS="${RPM_OPT_FLAGS} -I%{_includedir}/tqt -I%{_includedir}/tqt3 -I${PWD}/../sipgen -DYYERROR_VERBOSE" \
 	CXXFLAGS="${RPM_OPT_FLAGS} -I%{_includedir}/tqt -I%{_includedir}/tqt3 -I${PWD}/../sipgen -DYYERROR_VERBOSE"
 
