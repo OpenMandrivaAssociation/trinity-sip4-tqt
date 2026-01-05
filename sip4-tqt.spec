@@ -40,6 +40,8 @@ BuildRequires:	trinity-filesystem >= %{tde_version}
 
 %{!?with_clang:BuildRequires:	gcc-c++}
 
+BuildRequires:  make
+
 # BISON support
 BuildRequires:  bison
 
