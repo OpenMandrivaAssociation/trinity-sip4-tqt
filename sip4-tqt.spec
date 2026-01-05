@@ -9,19 +9,11 @@
 %if "%{?tde_version}" == ""
 %define tde_version 14.1.5
 %endif
-%define pkg_rel 3
+%define pkg_rel 4
 
 %define tde_pkg sip4-tqt
 %define tde_prefix /opt/trinity
-%define tde_bindir %{tde_prefix}/bin
-%define tde_datadir %{tde_prefix}/share
-%define tde_docdir %{tde_datadir}/doc
-%define tde_includedir %{tde_prefix}/include
-%define tde_libdir %{tde_prefix}/%{_lib}
-%define tde_tdeappdir %{tde_datadir}/applications/tde
-%define tde_tdedocdir %{tde_docdir}/tde
-%define tde_tdeincludedir %{tde_includedir}/tde
-%define tde_tdelibdir %{tde_libdir}/trinity
+
 
 %undefine __brp_remove_la_files
 %define dont_remove_libtool_files 1
@@ -40,11 +32,6 @@ Group:		Development/Tools/Building
 URL:		http://www.trinitydesktop.org/
 
 License:	GPLv2+
-
-#Vendor:		Trinity Desktop
-#Packager:	Francois Andriot <francois.andriot@free.fr>
-
-Prefix:		%{tde_prefix}
 
 Source0:	https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/dependencies/%{tarball_name}-%{tde_version}%{?preversion:~%{preversion}}.tar.xz
 
@@ -120,8 +107,8 @@ needed to develop Python bindings with sip.
 
 %files -n sip4-tqt-devel
 %defattr(-,root,root,-)
-%{tde_bindir}/sip-tqt
-%{tde_includedir}/sip-tqt.h
+%{tde_prefix}/bin/sip-tqt
+%{tde_prefix}/include/sip-tqt.h
 
 %prep
 %autosetup -n %{tarball_name}-%{tde_version}%{?preversion:~%{preversion}}
@@ -129,14 +116,14 @@ needed to develop Python bindings with sip.
 
 %build
 # unset QTDIR QTINC QTLIB
-export PKG_CONFIG_PATH="%{tde_libdir}/pkgconfig"
+export PKG_CONFIG_PATH="%{tde_prefix}/%{_lib}/pkgconfig"
 
 mkdir build
 cd build
 %__python ../configure.py \
-	-b %{tde_bindir} \
+	-b %{tde_prefix}/bin \
 	-d %{python_sitearch} \
-	-e %{tde_includedir} \
+	-e %{tde_prefix}/include \
 	-u STRIP="" \
   %{?with_clang:-p linux-clang} \
 	CFLAGS="${RPM_OPT_FLAGS} -I%{_includedir}/tqt -I%{_includedir}/tqt3 -I${PWD}/../sipgen -DYYERROR_VERBOSE" \
