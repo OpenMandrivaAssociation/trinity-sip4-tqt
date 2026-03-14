@@ -1,15 +1,10 @@
 %bcond clang 1
 
-# BUILD WARNING:
-#  Remove qt-devel and qt3-devel and any kde*-devel on your system !
-#  Having KDE libraries may cause FTBFS here !
-
 # TDE variables
 %define tde_epoch 2
 %if "%{?tde_version}" == ""
 %define tde_version 14.1.5
 %endif
-%define pkg_rel 4
 
 %define tde_pkg sip4-tqt
 %define tde_prefix /opt/trinity
@@ -26,16 +21,16 @@
 Name:		trinity-%{tde_pkg}
 Epoch:		%{tde_epoch}
 Version:	4.10.5
-Release:	%{?tde_version}_%{?!preversion:%{pkg_rel}}%{?preversion:0_%{preversion}}%{?dist}
+Release:	%{?tde_version:%{tde_version}_}5
 Summary:	Python/C++ bindings generator runtime library
 Group:		Development/Tools/Building
 URL:		http://www.trinitydesktop.org/
 
 License:	GPLv2+
 
-Source0:	https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/dependencies/%{tarball_name}-%{tde_version}%{?preversion:~%{preversion}}.tar.xz
+Source0:	https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/dependencies/%{tarball_name}-%{tde_version}.tar.xz
 
-BuildRequires:	libtqt4-devel >= %{?epoch:%{epoch}:}4.2.0
+BuildRequires:	pkgconfig(tqt)
 BuildRequires:	trinity-filesystem >= %{tde_version}
 
 %{!?with_clang:BuildRequires:	gcc-c++}
@@ -52,7 +47,6 @@ BuildRequires:	flex
 BuildRequires:  pkgconfig(python)
 
 %description
-
 SIP is a tool for generating bindings for C++ classes with some ideas
 borrowed from SWIG, but capable of tighter bindings because of its
 specificity towards C++ and Python.
