@@ -75,7 +75,7 @@ specificity towards C++ and Python.
 %package -n sip4-tqt-devel
 Summary:		Python/C++ bindings generator (Development Files)
 Group:			Development/Libraries/Python
-Requires:		sip4-tqt = %{?epoch:%{epoch}:}%{version}-%{release}
+Requires:		sip4-tqt = %{EVRD}
 
 Requires:    pkgconfig(python)
 
@@ -107,12 +107,11 @@ needed to develop Python bindings with sip.
 %{tde_prefix}/include/sip-tqt.h
 
 %prep
-%autosetup -n %{tarball_name}-%{tde_version}%{?preversion:~%{preversion}}
+%autosetup -n %{tarball_name}-%{tde_version}
 
 
 %build
 # unset QTDIR QTINC QTLIB
-export PKG_CONFIG_PATH="%{tde_prefix}/%{_lib}/pkgconfig"
 
 mkdir build
 cd build
