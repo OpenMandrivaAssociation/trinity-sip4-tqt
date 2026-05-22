@@ -40,6 +40,7 @@ BuildRequires:	flex
 
 # PYTHON support
 BuildRequires:  pkgconfig(python)
+BuildRequires:  python%{pyver}dist(setuptools)
 
 %description
 SIP is a tool for generating bindings for C++ classes with some ideas
