@@ -1,10 +1,6 @@
 %bcond clang 1
 
 # TDE variables
-%if "%{?tde_version}" == ""
-%define tde_version 14.1.5
-%endif
-
 %define tde_pkg sip4-tqt
 %define tde_prefix /opt/trinity
 
@@ -18,19 +14,19 @@
 
 
 Name:		trinity-%{tde_pkg}
-Version:	4.10.5
-Release:	%{?tde_version:%{tde_version}_}5
+Version:	14.1.6
+Release:	1
 Summary:	Python/C++ bindings generator runtime library
 Group:		Development/Tools/Building
 URL:		http://www.trinitydesktop.org/
 
 License:	GPLv2+
 
-Source0:	https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{tde_version}/main/dependencies/%{tarball_name}-%{tde_version}.tar.xz
+Source0:	https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{version}/main/dependencies/%{tarball_name}-%{version}.tar.xz
 
 BuildRequires:  pkgconfig(tqt-mt)
 BuildRequires:	pkgconfig(tqt)
-BuildRequires:	trinity-filesystem >= %{tde_version}
+BuildRequires:	trinity-filesystem >= %{version}
 
 %{!?with_clang:BuildRequires:	gcc-c++}
 
@@ -55,7 +51,7 @@ specificity towards C++ and Python.
 %package -n sip4-tqt
 Summary:	Python/C++ bindings generator (Runtime Library)
 Group:		Development/Tools/Building
-Requires:	trinity-filesystem >= %{tde_version}
+Requires:	trinity-filesystem >= %{version}
 Requires:	pkgconfig(python)
 
 %description -n sip4-tqt
@@ -106,7 +102,7 @@ needed to develop Python bindings with sip.
 %{tde_prefix}/include/sip-tqt.h
 
 %prep
-%autosetup -n %{tarball_name}-%{tde_version}
+%autosetup -n %{tarball_name}-%{version}
 
 
 %build
