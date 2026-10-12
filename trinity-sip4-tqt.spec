@@ -15,7 +15,7 @@
 
 Name:		trinity-%{tde_pkg}
 Version:	14.1.6
-Release:	1
+Release:	2
 Summary:	Python/C++ bindings generator runtime library
 Group:		Development/Tools/Building
 URL:		http://www.trinitydesktop.org/
