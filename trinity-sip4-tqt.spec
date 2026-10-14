@@ -23,6 +23,8 @@ URL:		http://www.trinitydesktop.org/
 License:	GPLv2+
 
 Source0:	https://mirror.ppa.trinitydesktop.org/trinity/releases/R%{version}/main/dependencies/%{tarball_name}-%{version}.tar.xz
+# Python 3.15 dropped the PyWeakref_GetObject declaration. The symbol remains.
+Patch0:		trinity-sip4-tqt-python315-weakref.patch
 
 BuildRequires:  pkgconfig(tqt-mt)
 BuildRequires:	pkgconfig(tqt)
