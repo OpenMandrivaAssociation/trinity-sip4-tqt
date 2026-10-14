@@ -105,7 +105,7 @@ needed to develop Python bindings with sip.
 %{tde_prefix}/include/sip-tqt.h
 
 %prep
-%autosetup -n %{tarball_name}-%{version}
+%autosetup -p1 -n %{tarball_name}-%{version}
 
 
 %build
